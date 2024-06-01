@@ -53,7 +53,6 @@
 #include "specialSlicePlugin/specialSlicePlugin.h"
 #include "splitPlugin/split.h"
 #include "voxelGeneratorPlugin/voxelGenerator.h"
-#include "yoloNMSPlugin/yoloNMSPlugin.h"
 
 #include <algorithm>
 #include <array>
@@ -190,6 +189,7 @@ extern "C"
         initializePlugin<nvinfer1::plugin::EfficientNMSImplicitTFTRTPluginCreator>(logger, libNamespace);
         initializePlugin<nvinfer1::plugin::EfficientNMSONNXPluginCreator>(logger, libNamespace);
         initializePlugin<nvinfer1::plugin::EfficientNMSPluginCreator>(logger, libNamespace);
+        initializePlugin<nvinfer1::plugin::EfficientNMSXPluginCreator>(logger, libNamespace);
         initializePlugin<nvinfer1::plugin::FlattenConcatPluginCreator>(logger, libNamespace);
         initializePlugin<nvinfer1::plugin::GenerateDetectionPluginCreator>(logger, libNamespace);
         initializePlugin<nvinfer1::plugin::GridAnchorPluginCreator>(logger, libNamespace);
@@ -219,7 +219,6 @@ extern "C"
         initializePlugin<nvinfer1::plugin::SpecialSlicePluginCreator>(logger, libNamespace);
         initializePlugin<nvinfer1::plugin::SplitPluginCreator>(logger, libNamespace);
         initializePlugin<nvinfer1::plugin::VoxelGeneratorPluginCreator>(logger, libNamespace);
-        initializePlugin<nvinfer1::plugin::YoloNMSPluginCreator>(logger, libNamespace);
         return true;
     }
 } // extern "C"

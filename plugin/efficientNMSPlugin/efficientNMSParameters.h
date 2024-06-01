@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: Copyright (c) 1993-2023 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+ * SPDX-FileCopyrightText: Copyright (c) 1993-2024 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -43,6 +43,7 @@ struct EfficientNMSParameters
     int32_t numSelectedBoxes = 4096;
     int32_t scoreBits = -1;
     bool outputONNXIndices = false;
+    bool outputNMSIndices = false;
 
     // Related to Tensor Configuration
     // (These are set by the various plugin configuration methods, no need to define them during plugin creation.)

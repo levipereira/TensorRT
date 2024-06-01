@@ -69,7 +69,6 @@ set(PLUGIN_LISTS
     specialSlicePlugin
     splitPlugin
     voxelGeneratorPlugin
-    yoloNMSPlugin
 )
 
 # Add BERT sources if ${BERT_GENCODES} was populated

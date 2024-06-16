@@ -116,6 +116,42 @@ __device__ void MapNMSData(EfficientNMSParameters param, int idx, int imageIdx, 
 }
 
 template <typename T>
+__device__ void WriteNMSXResult(EfficientNMSParameters param, int* __restrict__ numDetectionsOutput,
+    T* __restrict__ nmsScoresOutput, int* __restrict__ nmsClassesOutput, BoxCorner<T>* __restrict__ nmsBoxesOutput,
+    int* __restrict__ nmsIndicesOutput, T threadScore, int threadClass, BoxCorner<T> threadBox, int imageIdx,
+    unsigned int resultsCounter, int boxIdxMap)
+{
+    int outputIdx = imageIdx * param.numOutputBoxes + resultsCounter - 1;
+    if (param.scoreSigmoid)
+    {
+        nmsScoresOutput[outputIdx] = sigmoid_mp(threadScore);
+    }
+    else if (param.scoreBits > 0)
+    {
+        nmsScoresOutput[outputIdx] = add_mp(threadScore, (T) -1);
+    }
+    else
+    {
+        nmsScoresOutput[outputIdx] = threadScore;
+    }
+    nmsClassesOutput[outputIdx] = threadClass;
+    if (param.clipBoxes)
+    {
+        nmsBoxesOutput[outputIdx] = threadBox.clip((T) 0, (T) 1);
+    }
+    else
+    {
+        nmsBoxesOutput[outputIdx] = threadBox;
+    }
+    numDetectionsOutput[imageIdx] = resultsCounter;
+
+    int index = boxIdxMap % param.numAnchors;
+
+    nmsIndicesOutput[outputIdx] = index;
+}
+
+
+template <typename T>
 __device__ void WriteNMSResult(EfficientNMSParameters param, int* __restrict__ numDetectionsOutput,
     T* __restrict__ nmsScoresOutput, int* __restrict__ nmsClassesOutput, BoxCorner<T>* __restrict__ nmsBoxesOutput,
     T threadScore, int threadClass, BoxCorner<T> threadBox, int imageIdx, unsigned int resultsCounter)
@@ -271,6 +307,12 @@ __global__ void EfficientNMS(EfficientNMSParameters param, const int* topNumData
                         {
                             WriteONNXResult(
                                 param, outputIndexData, nmsIndicesOutput, imageIdx, threadClass[tile], boxIdxMap[tile]);
+                        }
+                        else if (param.outputNMSIndices)
+                        {
+                            WriteNMSXResult<T>(param, numDetectionsOutput, nmsScoresOutput, nmsClassesOutput, nmsBoxesOutput,
+                                nmsIndicesOutput, threadScore[tile], threadClass[tile], threadBox[tile], imageIdx,
+                                resultsCounter, boxIdxMap[tile]);
                         }
                         else
                         {
@@ -631,6 +673,15 @@ pluginStatus_t EfficientNMSDispatch(EfficientNMSParameters param, const void* bo
     if (param.outputONNXIndices)
     {
         CSC(cudaMemsetAsync(nmsIndicesOutput, 0xFF, param.batchSize * param.numOutputBoxes * 3 * sizeof(int), stream), STATUS_FAILURE);
+    }
+    else if (param.outputNMSIndices)
+    {
+            CSC(cudaMemsetAsync(numDetectionsOutput, 0x00, param.batchSize * sizeof(int), stream), STATUS_FAILURE);
+            CSC(cudaMemsetAsync(nmsScoresOutput, 0x00, param.batchSize * param.numOutputBoxes * sizeof(T), stream), STATUS_FAILURE);
+            CSC(cudaMemsetAsync(nmsBoxesOutput, 0x00, param.batchSize * param.numOutputBoxes * 4 * sizeof(T), stream), STATUS_FAILURE);
+            CSC(cudaMemsetAsync(nmsClassesOutput, 0x00, param.batchSize * param.numOutputBoxes * sizeof(int), stream), STATUS_FAILURE);
+            CSC(cudaMemsetAsync(nmsIndicesOutput, 0xFF, param.batchSize * param.numOutputBoxes * sizeof(int), stream), STATUS_FAILURE);
+
     }
     else
     {

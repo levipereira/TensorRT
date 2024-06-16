@@ -187,6 +187,7 @@ extern "C"
         initializePlugin<nvinfer1::plugin::DecodeBbox3DPluginCreator>(logger, libNamespace);
         initializePlugin<nvinfer1::plugin::DetectionLayerPluginCreator>(logger, libNamespace);
         initializePlugin<nvinfer1::plugin::EfficientNMSPluginCreator>(logger, libNamespace);
+        initializePlugin<nvinfer1::plugin::EfficientNMSXPluginCreator>(logger, libNamespace);
         initializePlugin<nvinfer1::plugin::EfficientNMSONNXPluginCreator>(logger, libNamespace);
         initializePlugin<nvinfer1::plugin::EfficientNMSExplicitTFTRTPluginCreator>(logger, libNamespace);
         initializePlugin<nvinfer1::plugin::EfficientNMSImplicitTFTRTPluginCreator>(logger, libNamespace);

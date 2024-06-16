@@ -91,6 +91,27 @@ protected:
     std::string mPluginName;
 };
 
+class EfficientNMSXPluginCreator : public nvinfer1::pluginInternal::BaseCreator
+{
+public:
+    EfficientNMSXPluginCreator();
+    ~EfficientNMSXPluginCreator() override = default;
+
+    const char* getPluginName() const noexcept override;
+    const char* getPluginVersion() const noexcept override;
+    const PluginFieldCollection* getFieldNames() noexcept override;
+
+    IPluginV2DynamicExt* createPlugin(const char* name, const PluginFieldCollection* fc) noexcept override;
+    IPluginV2DynamicExt* deserializePlugin(
+        const char* name, const void* serialData, size_t serialLength) noexcept override;
+
+protected:
+    PluginFieldCollection mFC;
+    EfficientNMSParameters mParam;
+    std::vector<PluginField> mPluginAttributes;
+    std::string mPluginName;
+};
+
 // ONNX NonMaxSuppression Op Compatibility
 class EfficientNMSONNXPluginCreator : public nvinfer1::pluginInternal::BaseCreator
 {

@@ -194,6 +194,7 @@ extern "C"
         initializePlugin<nvinfer1::plugin::EfficientNMSImplicitTFTRTPluginCreator>(logger, libNamespace);
         initializePlugin<nvinfer1::plugin::EfficientNMSONNXPluginCreator>(logger, libNamespace);
         initializePlugin<nvinfer1::plugin::EfficientNMSPluginCreator>(logger, libNamespace);
+        initializePlugin<nvinfer1::plugin::EfficientNMSXPluginCreator>(logger, libNamespace);
         initializePlugin<nvinfer1::plugin::FlattenConcatPluginCreator>(logger, libNamespace);
         initializePlugin<nvinfer1::plugin::GenerateDetectionPluginCreator>(logger, libNamespace);
         initializePlugin<nvinfer1::plugin::GridAnchorPluginCreator>(logger, libNamespace);

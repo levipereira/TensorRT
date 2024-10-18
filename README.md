@@ -100,7 +100,10 @@ For Linux platforms, we recommend that you generate a docker container for build
 
 1. #### Generate the TensorRT-OSS build container.
     The TensorRT-OSS build container can be generated using the supplied Dockerfiles and build scripts. The build containers are configured for building TensorRT OSS out-of-the-box.
-
+    **Example: DeepStream 7.1 Compatible Ubuntu 22.04 on x86-64 with cuda-12.6.2 (default)**
+    ```bash
+    ./docker/build.sh --file docker/ubuntu-22.04.Dockerfile --tag tensorrt-ubuntu22.04-cuda12.6 --cuda 12.6.2
+    ```` 
     **Example: Ubuntu 20.04 on x86-64 with cuda-12.5 (default)**
     ```bash
     ./docker/build.sh --file docker/ubuntu-20.04.Dockerfile --tag tensorrt-ubuntu20.04-cuda12.5
